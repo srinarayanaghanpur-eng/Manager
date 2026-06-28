@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f4f6fb;
+  --bg-2: #e9edf7;
+  --text: #0f172a;
+  --muted: #64748b;
+  --card: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(255, 255, 255, 0.7);
+  --ring: rgba(53, 99, 255, 0.35);
+}
+
+.dark {
+  --bg: #070b18;
+  --bg-2: #0b1224;
+  --text: #e7ecf7;
+  --muted: #94a3b8;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --ring: rgba(120, 140, 255, 0.45);
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+body {
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(53,99,255,0.18), transparent 55%),
+    radial-gradient(1000px 500px at 110% 10%, rgba(168,85,247,0.16), transparent 50%),
+    var(--bg);
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+/* Glassmorphism card */
+.glass {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(2, 6, 23, 0.18);
+}
+
+.glass-strong {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.text-muted { color: var(--muted); }
+
+.gradient-text {
+  background: linear-gradient(90deg, #3563ff, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #3563ff, #7c3aed);
+  color: white;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s;
+}
+.btn-primary:hover { box-shadow: 0 0 24px var(--ring); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(120,130,160,0.4); border-radius: 999px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+input, select, textarea {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 0.75rem;
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+
+@keyframes shimmer { 100% { transform: translateX(100%); } }

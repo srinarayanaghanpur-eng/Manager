@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function role() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    function isAdmin() { return signedIn() && role() == 'super_admin'; }
+    function isManager() { return signedIn() && role() in ['super_admin', 'social_manager']; }
+    function canEdit() { return signedIn() && role() in ['super_admin', 'social_manager', 'content_creator']; }
+
+    // Users: a user can read their own doc; only admins manage roles.
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow write: if isAdmin() || request.auth.uid == uid;
+    }
+
+    // Schools & social accounts: managers edit, everyone signed-in reads.
+    match /schools/{id} {
+      allow read: if signedIn();
+      allow write: if isManager();
+    }
+    match /socialAccounts/{id} {
+      allow read: if signedIn();
+      allow write: if isManager();
+    }
+
+    // Content: creators can create/draft; only admins can DELETE.
+    match /contentIdeas/{id} {
+      allow read: if signedIn();
+      allow create, update: if canEdit();
+      allow delete: if isAdmin();
+    }
+    match /contentCalendar/{id} {
+      allow read: if signedIn();
+      allow create, update: if canEdit();
+      allow delete: if isAdmin();
+    }
+
+    // Approvals: anyone can submit; only ADMIN can approve/reject.
+    match /approvals/{id} {
+      allow read: if signedIn();
+      allow create: if canEdit();
+      allow update: if isAdmin()
+        || (canEdit() && request.resource.data.approvalStatus == 'waiting_for_approval');
+      allow delete: if isAdmin();
+    }
+
+    match /mediaLibrary/{id} {
+      allow read: if signedIn();
+      allow create, update: if canEdit();
+      allow delete: if isAdmin();
+    }
+
+    match /leads/{id} {
+      allow read: if signedIn();
+      allow create, update: if canEdit();
+      allow delete: if isAdmin();
+    }
+
+    match /analyticsMock/{id} { allow read: if signedIn(); allow write: if isManager(); }
+    match /weeklyReports/{id} { allow read: if signedIn(); allow write: if isManager(); }
+    match /agentOutputs/{id} { allow read: if signedIn(); allow write: if canEdit(); }
+    match /settings/{id} { allow read: if signedIn(); allow write: if isAdmin(); }
+  }
+}
