@@ -26,10 +26,14 @@ export default function SchoolsPage() {
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className="grid h-14 w-14 place-items-center rounded-2xl text-lg font-bold text-white"
-                    style={{ background: `linear-gradient(135deg, ${s.brandColors.primary}, ${s.brandColors.secondary})` }}
+                    className="grid h-14 w-14 place-items-center rounded-2xl text-lg font-bold text-white overflow-hidden"
+                    style={s.logoUrl ? {} : { background: `linear-gradient(135deg, ${s.brandColors.primary}, ${s.brandColors.secondary})` }}
                   >
-                    {s.name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                    {s.logoUrl ? (
+                      <img src={s.logoUrl} alt={s.name} className="h-full w-full object-contain" />
+                    ) : (
+                      s.name.split(" ").map((w) => w[0]).slice(0, 2).join("")
+                    )}
                   </div>
                   <div>
                     <h3 className="font-bold leading-tight">{s.name}</h3>
