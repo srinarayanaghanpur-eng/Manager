@@ -18,6 +18,7 @@ export const navItems: NavItem[] = [
   { href: "/media", label: "Media Library", icon: "Images" },
   { href: "/analytics", label: "Analytics", icon: "BarChart3" },
   { href: "/leads", label: "Leads", icon: "Users" },
+  { href: "/youtube", label: "YouTube Studio", icon: "Youtube" },
   { href: "/monetization", label: "Monetization & Growth", icon: "Wallet" },
   { href: "/settings", label: "Settings", icon: "Settings" },
 ];

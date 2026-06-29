@@ -6,10 +6,12 @@ import { cn, prettyLabel, statusColor } from "@/lib/utils";
 export function GlassCard({
   children,
   className,
+  style,
   hover = true,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   hover?: boolean;
 }) {
   return (
@@ -19,6 +21,7 @@ export function GlassCard({
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
       whileHover={hover ? { y: -3 } : undefined}
+      style={style}
       className={cn("glass rounded-2xl p-5", className)}
     >
       {children}

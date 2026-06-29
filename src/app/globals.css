@@ -80,3 +80,28 @@ input, select, textarea {
 input::placeholder, textarea::placeholder { color: var(--muted); }
 
 @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* YouTube red accent */
+.youtube-accent { color: #ef4444; }
+.youtube-bg { background: rgba(239, 68, 68, 0.12); }
+.youtube-border { border-color: rgba(239, 68, 68, 0.3); }
+.youtube-gradient { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+/* Platform tab styles */
+.platform-tab {
+  transition: all 0.2s ease;
+  position: relative;
+}
+.platform-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+}
+.platform-tab.yt-tab.active::after { background: #ef4444; }
+.platform-tab.ig-tab.active::after { background: #E1306C; }
+.platform-tab.fb-tab.active::after { background: #1877F2; }
+.platform-tab.wa-tab.active::after { background: #25D366; }

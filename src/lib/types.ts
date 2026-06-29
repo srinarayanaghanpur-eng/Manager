@@ -49,6 +49,67 @@ export type LeadStatus =
 
 export type MediaConsent = "approved" | "not_approved" | "need_parent_consent";
 
+export type YouTubeContentType =
+  | "shorts"
+  | "long_video"
+  | "event"
+  | "admission"
+  | "parent_guidance"
+  | "teacher_tip"
+  | "student_achievement"
+  | "festival_greeting"
+  | "weekly_highlights";
+
+export interface YouTubeChannel {
+  id: string;
+  schoolId: string;
+  channelName: string;
+  channelUrl: string;
+  subscriberCount: number;
+  totalVideos: number;
+  totalShorts: number;
+  totalViews: number;
+  watchHours: number;
+  shortsViews: number;
+  weeklyUploadTarget: number;
+  bestVideoIdeas: string[];
+  bestShortsIdeas: string[];
+  monetizationEligibility: number;
+  uploadsLast90Days: number;
+}
+
+export interface YouTubeVideo {
+  id: string;
+  schoolId: string;
+  title: string;
+  youtubeLink: string;
+  datePublished: string;
+  views: number;
+  likes: number;
+  comments: number;
+  watchTime: number;
+  contentType: YouTubeContentType;
+  performanceRating: number;
+  notes: string;
+}
+
+export interface YouTubeContentPlan {
+  id: string;
+  schoolId: string;
+  videoType: string;
+  topic: string;
+  platform: string;
+  status: "draft" | "ready" | "published";
+  createdAt: string;
+}
+
+export interface YouTubeWeeklyPlan {
+  day: string;
+  contentType: string;
+  idea: string;
+  platform: string;
+}
+
 export interface BaseDoc {
   id: string;
   createdAt: string;

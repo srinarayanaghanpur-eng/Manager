@@ -5,7 +5,7 @@
 import type { Platform } from "@/lib/types";
 import { generateReelScript, type ReelDuration } from "./generateReelScript";
 import { generateCaption } from "./generateCaption";
-import { platformLabel } from "@/lib/utils";
+import { platformLabel, formatNumber } from "@/lib/utils";
 
 export interface AgentCtx {
   schoolName: string; // "Sri Narayana High School (Ghanpur)"
@@ -276,5 +276,228 @@ export async function runAnalyticsDoctor(ctx: AgentCtx): Promise<string> {
     `5. A weekend highlight reel set to trending (clean) audio.`,
     ``,
     `📅 PRESCRIPTION: post consistently (same times daily), lead with reels, and review again in 7 days.`,
+  ].join("\n");
+}
+
+// ── 9. YouTube Shorts Agent ──────────────────────────────────────────────────
+export async function runYouTubeShorts(ctx: AgentCtx): Promise<string> {
+  const topic = val(ctx, "topic", "school activity");
+  const duration = val(ctx, "duration", "30");
+  const language = val(ctx, "language", "english");
+  const goal = val(ctx, "goal", "views");
+
+  const goalLabels: Record<string, string> = { views: "Views & reach", admissions: "Admission enquiries", parent_trust: "Parent trust", branding: "School branding" };
+  const langLabels: Record<string, string> = { english: "English", telugu: "Telugu", hinglish: "Hinglish" };
+  const durations: Record<string, string> = { "10": "10 seconds", "20": "20 seconds", "30": "30 seconds", "60": "60 seconds" };
+
+  return [
+    `▶️ YOUTUBE SHORTS SCRIPT`,
+    `School: ${ctx.schoolShort} (${ctx.branch})`,
+    `Topic: ${topic}`,
+    `Duration: ${durations[duration] || "30 seconds"}  |  Language: ${langLabels[language] || "English"}  |  Goal: ${goalLabels[goal] || "Views"}`,
+    ``,
+    `📝 TITLE`,
+    `${topic} at ${ctx.schoolShort}! 🎓 #Shorts`,
+    ``,
+    `🪝 HOOK LINE (first 2 seconds)`,
+    `"${topic} at ${ctx.schoolShort} — you won't believe this! 👀"`,
+    `[On-screen text: "${topic.toUpperCase()} — ${ctx.schoolShort.toUpperCase()}"]`,
+    ``,
+    `🎙️ VOICEOVER (${language})`,
+    language === "telugu"
+      ? `"${ctx.schoolShort} లో ${topic} చూడండి. పిల్లల నేర్చుకునే తీరు అద్భుతం! మీరు కూడా చూడండి."`
+      : language === "hinglish"
+      ? `"Dekhiye ${ctx.schoolShort} mein ${topic}. Bacche sikh rahe hain aur mazaa kar rahe hain. Aaiye aur dekhiye!"`
+      : `"Watch ${topic} at ${ctx.schoolShort}. Our students learn with passion and joy. Come see the difference!"`,
+    ``,
+    `🎬 SCENE-BY-SCENE SCRIPT (${duration}s)`,
+    `0-2s: Hook — fast opening shot of ${topic}. Text overlay: "${topic}"`,
+    `2-${Math.round(Number(duration) * 0.5)}s: Main content — show the activity with upbeat background music`,
+    `${Math.round(Number(duration) * 0.5)}-${Number(duration) - 5}s: Student reactions / teacher interaction — genuine moments`,
+    `${Number(duration) - 5}-${duration}s: CTA screen — "Subscribe for more" + school logo`,
+    ``,
+    `📝 TEXT OVERLAY (on screen)`,
+    `• "Real learning happens here 💙"`,
+    `• "Admissions open 2026"`,
+    `• "Subscribe 🔔"`,
+    ``,
+    `🧾 DESCRIPTION`,
+    `${topic} at ${ctx.schoolShort}, ${ctx.branch}. Watch our students shine! 🌟`,
+    `Admissions open for 2026-27. Call us to book a campus visit.`,
+    ``,
+    `#️⃣ HASHTAGS`,
+    `#${ctx.schoolShort.replace(/\s+/g, "")} #${ctx.branch}School #SchoolLife #${topic.replace(/\s+/g, "")} #Education #TelanganaSchools #Admissions2026 #Shorts`,
+    ``,
+    `🖼️ THUMBNAIL TEXT`,
+    `"${topic.toUpperCase()}!" — Bold white text with red outline. Show a smiling student or teacher in the background.`,
+    ``,
+    `⏰ BEST POSTING TIME`,
+    `Weekdays 6:00-8:00 PM (parents free after work) · Weekends 10:00 AM-12:00 PM`,
+    ``,
+    `📣 CALL TO ACTION`,
+    `"Subscribe for daily school updates! 🔔" — Pin a comment: "📞 Call us for admissions: ${ctx.branch} school"`,
+  ].join("\n");
+}
+
+// ── 10. YouTube Long Video Agent ─────────────────────────────────────────────
+export async function runYouTubeLongVideo(ctx: AgentCtx): Promise<string> {
+  const topic = val(ctx, "topic", "campus tour and facilities");
+  const videoType = val(ctx, "videoType", "long_video");
+
+  const typeLabels: Record<string, string> = {
+    shorts: "YouTube Shorts", long_video: "Long video", event: "School event",
+    admission: "Admission video", parent_guidance: "Parent guidance",
+    teacher_tip: "Teacher tip", student_achievement: "Student achievement",
+    festival_greeting: "Festival greeting", weekly_highlights: "Weekly highlights",
+  };
+
+  return [
+    `🎬 LONG-FORM VIDEO BLUEPRINT`,
+    `School: ${ctx.schoolShort} (${ctx.branch})`,
+    `Topic: ${topic}`,
+    `Type: ${typeLabels[videoType] || "Long video"}`,
+    ``,
+    `📝 VIDEO TITLE (SEO-optimised)`,
+    `${topic} | ${ctx.schoolShort} | ${ctx.branch} | A Complete Look 🎓`,
+    ``,
+    `🎙️ INTRO SCRIPT (first 30-45 seconds)`,
+    `"Namaste everyone! Welcome to ${ctx.schoolShort} in ${ctx.branch}. Today we're going to show you ${topic.toLowerCase()}. If you're a parent looking for the best school for your child, this video is for you. Let's go inside!"`,
+    ``,
+    `📋 FULL VIDEO STRUCTURE`,
+    `0:00-0:45 — INTRO: Host welcomes viewers, sets expectation, CTA to subscribe`,
+    `0:45-3:00 — MAIN CONTENT 1: Deep dive into the topic with real footage`,
+    `3:00-5:30 — MAIN CONTENT 2: Student/teacher interviews, genuine reactions`,
+    `5:30-7:00 — MAIN CONTENT 3: Behind-the-scenes, what makes this school special`,
+    `7:00-8:30 — ADMISSIONS INFO: How to apply, key dates, contact details`,
+    `8:30-10:00 — OUTRO: Recap, subscribe CTA, end screen with suggested videos`,
+    ``,
+    `🎙️ VOICEOVER (full script)`,
+    `Open with warm greeting in local language + English mix. Keep pace moderate — not too fast, not too slow. Use natural pauses. Emphasise keywords like "safe campus", "caring teachers", "best education". Close with direct admission CTA.`,
+    ``,
+    `📑 CHAPTERS`,
+    `0:00 Introduction`,
+    `0:45 Inside the Campus`,
+    `3:00 Student & Teacher Moments`,
+    `5:30 What Makes Us Special`,
+    `7:00 Admissions Information`,
+    `8:30 Thank You & Next Steps`,
+    ``,
+    `🧾 DESCRIPTION`,
+    `Welcome to ${ctx.schoolShort}, ${ctx.branch}! 🎓`,
+    ``,
+    `In this video, we take you through ${topic.toLowerCase()}. Whether you're a parent exploring schools or just curious about our campus, this video gives you a real, unfiltered look.`,
+    ``,
+    `📞 Admissions Open 2026-27 | Call us to book a visit!`,
+    `📍 Location: ${ctx.branch}, Warangal District, Telangana`,
+    ``,
+    `👍 LIKE this video if you found it helpful!`,
+    `🔔 SUBSCRIBE for more school updates!`,
+    `💬 COMMENT: What would you like to see next?`,
+    ``,
+    `🏷️ TAGS`,
+    `${ctx.schoolShort}, ${ctx.branch} school, best school in ${ctx.branch}, ${topic}, school tour, education, Telangana schools, school ${new Date().getFullYear()}, ${ctx.branch} education, school campus, ${ctx.schoolShort} ${ctx.branch}`,
+    ``,
+    `🖼️ THUMBNAIL TEXT`,
+    `"INSIDE ${ctx.schoolShort.toUpperCase()}" — Large yellow/white text on red background. Include a high-quality photo of the campus or students with consent. Use arrows or circle highlights.`,
+    ``,
+    `📌 PINNED COMMENT`,
+    `Thank you for watching! 🙏 Book a campus visit today — call us 📞 or WhatsApp. Admissions open for 2026-27! Which class is your child joining? Comment below! 💙`,
+    ``,
+    `🖥️ END SCREEN CTA`,
+    `• Subscribe button (60% of viewers should see it)`,
+    `• "Watch Next" — Best recommended video`,
+    `• "Visit Our School" — Link/contact overlay`,
+    `• End card with 10-second countdown to keep retention`,
+  ].join("\n");
+}
+
+// ── 11. Cross-Platform Repurposing Agent ─────────────────────────────────────
+export async function runCrossPlatformRepurpose(ctx: AgentCtx): Promise<string> {
+  const topic = val(ctx, "topic", "Today at our school - students engaged in science lab activity");
+
+  return [
+    `🔄 CROSS-PLATFORM REPURPOSING KIT`,
+    `School: ${ctx.schoolShort} (${ctx.branch})`,
+    `Original idea: "${topic}"`,
+    ``,
+    `━━━ YOUTUBE SHORTS ━━━`,
+    `Title: ${topic} at ${ctx.schoolShort}! 🎓`,
+    `Script (30s): Open with hook → show the activity → student reactions → CTA "Subscribe for daily updates"`,
+    `On-screen text: "Real learning in action 💙"`,
+    `Hashtags: #${ctx.schoolShort.replace(/\s+/g, "")} #SchoolLife #${ctx.branch}School #Shorts`,
+    `Best time: 6:00 PM weekdays`,
+    ``,
+    `━━━ INSTAGRAM REEL ━━━`,
+    `Caption: 💙 ${topic} at ${ctx.schoolShort}!`,
+    `Our students never stop amazing us. From theory to practice — this is what real education looks like.`,
+    `👉 Admissions open 2026-27 | DM us for details!`,
+    `#Reels #SchoolLife #${ctx.branch} #Education #Admissions2026`,
+    `Music: Trending audio (15-30s clip, school-safe version)`,
+    `Post time: 7:00 PM`,
+    ``,
+    `━━━ FACEBOOK REEL ━━━`,
+    `Caption: Dear parents 🙏`,
+    `Watch your children shine at ${ctx.schoolShort}, ${ctx.branch}! We believe in learning by doing, and our students prove it every day.`,
+    `📞 Call us to know more about admissions for 2026-27.`,
+    `#${ctx.branch} #School #Parenting #Education #LocalSchool`,
+    `Post time: 8:30 PM (when parents are most active)`,
+    ``,
+    `━━━ WHATSAPP STATUS ━━━`,
+    `Text: ✨ ${topic} at ${ctx.schoolShort}! 💙 Learning with joy. Admissions open — DM for details! 📞`,
+    `Duration: 15-30 sec clip (vertical, muted-friendly with text overlays)`,
+    `Post time: 9:00 AM (morning status check) + 6:00 PM (evening)`,
+    ``,
+    `#️⃣ UNIFIED HASHTAGS`,
+    `#${ctx.schoolShort.replace(/\s+/g, "")} #${ctx.branch}School #SchoolLife #Education #Admissions2026 #TelanganaSchools #FutureLeaders`,
+    ``,
+    `🖼️ THUMBNAIL TEXT (YouTube) / COVER (Instagram)`,
+    `"${topic}" — Bold, readable text. Bright colours. Include a smiling face (consented).`,
+    ``,
+    `💡 PRO TIP: Post the YouTube Short first → repurpose the same clip for Instagram Reels (different caption) → share to Facebook → WhatsApp status next morning.`,
+  ].join("\n");
+}
+
+// ── 12. Analytics Insight Agent ──────────────────────────────────────────────
+export async function runYouTubeAnalyticsInsight(ctx: AgentCtx): Promise<string> {
+  const numbers = val(ctx, "numbers", "Total views 5100, subscribers 140, best video 1560 views (admissions), Shorts avg 300 views, engagement 2.9%");
+  return [
+    `📊 YOUTUBE ANALYTICS INSIGHT`,
+    `School: ${ctx.schoolShort} (${ctx.branch})`,
+    `Your numbers: ${numbers}`,
+    ``,
+    `✅ WHAT WORKED`,
+    `• Admission-themed videos drive the highest engagement and views — parents actively search for admission info.`,
+    `• Event coverage (Science fair, Annual day) gets good initial views from parent sharing on WhatsApp.`,
+    `• Short-form content (<60s) has higher completion rate than long-form for this channel size.`,
+    ``,
+    `❌ WHAT FAILED / UNDERPERFORMED`,
+    `• Plain announcement videos (text-only or low-energy) have below-average retention — viewers click away fast.`,
+    `• Inconsistent posting schedule confuses the algorithm — gaps >5 days between uploads hurt reach.`,
+    `• Videos without a clear thumbnail strategy get fewer clicks from browse features.`,
+    ``,
+    `📈 WHICH VIDEO TYPE GOT MORE REACH`,
+    `Admission videos > School events > Teacher tips > General campus content`,
+    `The pattern is clear: parents engage most with content that directly helps their child's future.`,
+    ``,
+    `🎯 WHAT TO POST NEXT (5 recommendations)`,
+    `1. "Why ${ctx.schoolShort}?" — Parent testimonial video (highest conversion potential)`,
+    `2. Day-in-the-life Short — fast-paced, trending audio, student focus`,
+    `3. Teacher introduction series — build personal connection with parents`,
+    `4. Exam preparation tips from teachers — high save/share value for parents`,
+    `5. Campus facilities tour — addresses parent concerns about infrastructure`,
+    ``,
+    `📈 HOW TO INCREASE SUBSCRIBERS`,
+    `• Add "Subscribe" end screen + cards to every video (currently missing)`,
+    `• Create a consistent series (e.g. "Teacher Tip Tuesday") to drive return viewers`,
+    `• Ask viewers to subscribe in the first 30 seconds of every long video`,
+    `• Cross-promote YouTube channel on Instagram & Facebook`,
+    `• Run a "Subscribe & win" contest (e.g. school merchandise giveaway)`,
+    ``,
+    `💼 HOW TO CONVERT VIEWERS INTO ADMISSION ENQUIRIES`,
+    `• Add a clear phone number overlay on every video`,
+    `• Pin a comment with admissions CTA on every upload`,
+    `• Create a dedicated "Admissions 2026" playlist and link in channel banner`,
+    `• End every video with a specific CTA: "Call now for a campus visit"`,
+    `• Reply to comments within 1 hour — quick response builds trust and drives enquiries`,
   ].join("\n");
 }

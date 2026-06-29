@@ -34,3 +34,15 @@ export interface SocialAdapter {
   // NOTE: publish() intentionally NOT implemented. This app never auto-posts.
   // Publishing must always be a manual, admin-approved action.
 }
+
+// Returned by the live fetchers. `source` tells the UI whether the numbers are
+// real (pulled from the platform API) or demo seed data, so it can badge them.
+export interface SocialFetchResult {
+  platform: Platform;
+  connected: boolean;
+  source: "live" | "demo";
+  metrics: AccountMetrics | null;
+  posts: PlatformPost[];
+  /** Populated when a live call was attempted but failed. */
+  error?: string;
+}

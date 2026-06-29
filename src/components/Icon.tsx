@@ -6,7 +6,8 @@ import {
   PenLine, Hash, Image as ImageIcon, Youtube, Facebook, UserPlus,
   CalendarRange, Sun, Moon, Copy, Download, Sparkles, Plus, X, Phone,
   MessageCircle, ShieldCheck, Instagram, ChevronRight, Star, Eye,
-  Heart, Share2, Bookmark, Clock, Workflow, Send, type LucideProps,
+  Heart, Share2, Bookmark, Clock, Workflow, Send, Video, ListVideo,
+  type LucideProps,
 } from "lucide-react";
 
 const map: Record<string, React.ComponentType<LucideProps>> = {
@@ -15,7 +16,7 @@ const map: Record<string, React.ComponentType<LucideProps>> = {
   PenLine, Hash, Image: ImageIcon, Youtube, Facebook, UserPlus,
   CalendarRange, Sun, Moon, Copy, Download, Sparkles, Plus, X, Phone,
   MessageCircle, ShieldCheck, Instagram, ChevronRight, Star, Eye,
-  Heart, Share2, Bookmark, Clock, Workflow, Send,
+  Heart, Share2, Bookmark, Clock, Workflow, Send, Video, ListVideo,
   // Aliases so platformLabel() values resolve to an icon.
   YouTube: Youtube,
   WhatsApp: MessageCircle,

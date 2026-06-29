@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { SchoolProvider } from "@/components/SchoolProvider";
 import { AppShell } from "@/components/AppShell";
 import { PWARegister } from "@/components/PWARegister";
+import { FirebaseInit } from "@/components/FirebaseInit";
 
 export const metadata: Metadata = {
   title: "EduSocial AI Manager",
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <SchoolProvider>
-            <AppShell>{children}</AppShell>
+            <AppShell>
+              <FirebaseInit />
+              {children}
+            </AppShell>
             <PWARegister />
           </SchoolProvider>
         </ThemeProvider>

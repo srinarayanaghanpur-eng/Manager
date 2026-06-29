@@ -6,6 +6,7 @@ import { generateTrendIdeas } from "./generateTrendIdeas";
 import {
   runViralReel, runParentTrust, runAdmissionsGrowth, runTrendAdapt,
   runWeeklyPlanner, runShortsGrowth, runFacebookLocal, runAnalyticsDoctor,
+  runYouTubeShorts, runYouTubeLongVideo, runCrossPlatformRepurpose, runYouTubeAnalyticsInsight,
   type AgentCtx,
 } from "./agentRunners";
 import type { Platform } from "@/lib/types";
@@ -64,6 +65,11 @@ export async function runAgent(agentId: string, input: AgentRunInput): Promise<s
       const g = c.hashtagGroups;
       return `HASHTAG SETS\n\nLocal:\n${g.local.join(" ")}\n\nSchool:\n${g.school.join(" ")}\n\nEducation:\n${g.education.join(" ")}\n\nAdmission:\n${g.admission.join(" ")}\n\nEvent:\n${g.event.join(" ")}`;
     }
+    // ── YouTube agents ───────────────────────────────────────────────────
+    case "youtube-shorts": return runYouTubeShorts(ctx);
+    case "youtube-long-video": return runYouTubeLongVideo(ctx);
+    case "cross-platform-repurpose": return runCrossPlatformRepurpose(ctx);
+    case "youtube-analytics-insight": return runYouTubeAnalyticsInsight(ctx);
     case "poster-prompt": {
       const idea = await generateContentIdea({
         schoolName: input.schoolShort, platform, contentType: "poster",

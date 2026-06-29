@@ -1,9 +1,11 @@
 "use client";
 
-import { GlassCard, PageHeader, ConsentWarning } from "@/components/ui";
+import { useState } from "react";
+import { GlassCard, PageHeader, ConsentWarning, Button, Field } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { useTheme } from "@/components/ThemeProvider";
-import { isFirebaseConfigured } from "@/lib/firebase";
+import { isFirebaseConfigured, applyFirebaseConfig, clearFirebaseConfig, type FirebaseConfig } from "@/lib/firebase";
+import { seedFirestore } from "@/lib/data/service";
 import { users, currentUser } from "@/lib/data/seed";
 import { prettyLabel } from "@/lib/utils";
 
@@ -22,6 +24,17 @@ const integrations = [
 
 export default function SettingsPage() {
   const { theme, toggle } = useTheme();
+  const [seeding, setSeeding] = useState(false);
+  const [seedMsg, setSeedMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    setSeedMsg(null);
+    const res = await seedFirestore();
+    setSeedMsg({ ok: res.ok, text: res.message });
+    setSeeding(false);
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader title="Settings" subtitle="Roles, integrations, theme and safety policy." />
@@ -37,11 +50,12 @@ export default function SettingsPage() {
 
         <GlassCard hover={false}>
           <h3 className="mb-3 font-semibold">System status</h3>
-          <Status label="Firebase" ok={isFirebaseConfigured} okText="Configured" offText="Mock mode (no keys)" />
+          <Status label="Firebase" ok={isFirebaseConfigured} okText="Live" offText="Mock mode" />
           <Status label="AI provider" ok={false} okText="Live" offText="Mock responses" />
-          <p className="mt-2 text-[11px] text-muted">Add keys in <code>.env.local</code> to go live. The app runs fully on mock data until then.</p>
         </GlassCard>
       </div>
+
+      <FirebaseConfigCard onSeed={handleSeed} seeding={seeding} seedMsg={seedMsg} />
 
       <GlassCard hover={false}>
         <h3 className="mb-3 font-semibold">Users & roles</h3>
@@ -92,6 +106,111 @@ export default function SettingsPage() {
         </ConsentWarning>
       </GlassCard>
     </div>
+  );
+}
+
+function FirebaseConfigCard({
+  onSeed, seeding, seedMsg,
+}: {
+  onSeed: () => Promise<void>;
+  seeding: boolean;
+  seedMsg: { ok: boolean; text: string } | null;
+}) {
+  const [jsonInput, setJsonInput] = useState("");
+  const [parseMsg, setParseMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const handleApply = () => {
+    try {
+      const parsed = JSON.parse(jsonInput) as FirebaseConfig;
+      if (!parsed.apiKey || !parsed.projectId) {
+        setParseMsg({ ok: false, text: "Config must include apiKey and projectId at minimum." });
+        return;
+      }
+      applyFirebaseConfig(parsed);
+      setParseMsg({ ok: true, text: "Config saved! Reloading page to initialize Firebase…" });
+      setTimeout(() => window.location.reload(), 1200);
+    } catch {
+      setParseMsg({ ok: false, text: "Invalid JSON. Paste the full Firebase config object from your project settings." });
+    }
+  };
+
+  const handleClear = () => {
+    clearFirebaseConfig();
+    setParseMsg({ ok: true, text: "Config cleared. Reloading…" });
+    setTimeout(() => window.location.reload(), 800);
+  };
+
+  return (
+    <GlassCard hover={false}>
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className={`grid h-9 w-9 place-items-center rounded-xl ${isFirebaseConfigured ? "bg-emerald-400/15 text-emerald-400" : "bg-amber-400/15 text-amber-400"}`}>
+            <Icon name="Settings" className="h-4 w-4" />
+          </div>
+          <div>
+            <h3 className="font-semibold">Firebase Connection</h3>
+            <p className="text-[11px] text-muted">{isFirebaseConfigured ? "Firestore is live" : "Using mock/seed data"}</p>
+          </div>
+        </div>
+        <span className={`flex items-center gap-1.5 text-xs ${isFirebaseConfigured ? "text-emerald-400" : "text-amber-300"}`}>
+          <span className="h-1.5 w-1.5 rounded-full" style={{ background: isFirebaseConfigured ? "#22c55e" : "#f59e0b" }} />
+          {isFirebaseConfigured ? "Connected" : "Disconnected"}
+        </span>
+      </div>
+
+      {!isFirebaseConfigured ? (
+        <div className="space-y-3">
+          <p className="text-xs text-muted">
+            Paste your Firebase Web App config JSON below. Find it in your Firebase Console → Project Settings → General → Your apps → Web app → SDK setup &gt; Config.
+          </p>
+          <textarea
+            rows={5}
+            className="w-full px-3 py-2 text-xs font-mono"
+            placeholder='{"apiKey":"AIza...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"1:..."}'
+            value={jsonInput}
+            onChange={(e) => setJsonInput(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <Button onClick={handleApply} disabled={!jsonInput.trim()}>
+              <Icon name="Settings" className="h-4 w-4" /> Apply &amp; Reload
+            </Button>
+          </div>
+          {parseMsg && (
+            <p className={`rounded-xl p-2.5 text-xs ${parseMsg.ok ? "bg-emerald-400/15 text-emerald-300" : "bg-amber-400/15 text-amber-200"}`}>
+              {parseMsg.text}
+            </p>
+          )}
+          <details className="text-[11px] text-muted">
+            <summary className="cursor-pointer hover:text-current">Or set via .env.local</summary>
+            <pre className="mt-2 rounded-xl bg-white/5 p-3 leading-relaxed">
+{`NEXT_PUBLIC_FIREBASE_API_KEY=your_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=1:your_app_id:web:hash`}
+            </pre>
+          </details>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-xs text-muted">Firebase is live. You can seed Firestore with the app&apos;s mock data to get started, or clear the config to return to mock mode.</p>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={onSeed} disabled={seeding}>
+              <Icon name="Sparkles" className="h-4 w-4" /> {seeding ? "Seeding…" : "Seed Firestore with mock data"}
+            </Button>
+            <Button variant="soft" onClick={handleClear}>
+              <Icon name="X" className="h-4 w-4" /> Clear &amp; revert to mock
+            </Button>
+          </div>
+          {seedMsg && (
+            <p className={`rounded-xl p-2.5 text-xs ${seedMsg.ok ? "bg-emerald-400/15 text-emerald-300" : "bg-amber-400/15 text-amber-200"}`}>
+              {seedMsg.text}
+            </p>
+          )}
+        </div>
+      )}
+    </GlassCard>
   );
 }
 

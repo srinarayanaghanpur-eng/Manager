@@ -14,6 +14,9 @@ import type {
   SocialAccount,
   Sponsor,
   WeeklyReport,
+  YouTubeChannel,
+  YouTubeVideo,
+  YouTubeContentPlan,
 } from "@/lib/types";
 
 export const SCHOOL_A = "school_narayana";
@@ -194,6 +197,68 @@ export const weeklyReports: WeeklyReport[] = [
   },
 ];
 
+// ---------------------------------------------------------------------------
+// YouTube Channel data — connected to Sri Adarshavani High School
+// ---------------------------------------------------------------------------
+export const youTubeChannels: YouTubeChannel[] = [
+  {
+    id: "yt_channel_adarshavani",
+    schoolId: SCHOOL_B,
+    channelName: "Sri Adarshavani High School Duggondi",
+    channelUrl: "https://www.youtube.com/@sriadarshavanihighschooldu7480",
+    subscriberCount: 140,
+    totalVideos: 28,
+    totalShorts: 15,
+    totalViews: 5100,
+    watchHours: 60,
+    shortsViews: 3400,
+    weeklyUploadTarget: 5,
+    bestVideoIdeas: ["School campus tour", "Teacher introduction series", "Parent testimonial interviews"],
+    bestShortsIdeas: ["Morning assembly moments", "Classroom fun clips", "Student achievement shoutouts"],
+    monetizationEligibility: 12,
+    uploadsLast90Days: 18,
+  },
+  {
+    id: "yt_channel_narayana",
+    schoolId: SCHOOL_A,
+    channelName: "Sri Narayana High School",
+    channelUrl: "https://youtube.com/@srinarayana",
+    subscriberCount: 540,
+    totalVideos: 82,
+    totalShorts: 45,
+    totalViews: 24800,
+    watchHours: 310,
+    shortsViews: 86000,
+    weeklyUploadTarget: 7,
+    bestVideoIdeas: ["Campus tour cinematic", "Alumni success stories", "Classroom teaching methods"],
+    bestShortsIdeas: ["Study tips from toppers", "School events highlights", "Teacher fun moments"],
+    monetizationEligibility: 28,
+    uploadsLast90Days: 38,
+  },
+];
+
+export const youTubeVideoLibrary: YouTubeVideo[] = [
+  { id: "ytv1", schoolId: SCHOOL_B, title: "Welcome to Sri Adarshavani High School", youtubeLink: "https://youtube.com/watch?v=mock_a1", datePublished: "2026-05-15", views: 1200, likes: 85, comments: 12, watchTime: 28, contentType: "long_video", performanceRating: 75, notes: "First campus introduction video" },
+  { id: "ytv2", schoolId: SCHOOL_B, title: "Morning Assembly - Sri Adarshavani", youtubeLink: "https://youtube.com/watch?v=mock_a2", datePublished: "2026-05-20", views: 340, likes: 22, comments: 3, watchTime: 4, contentType: "shorts", performanceRating: 60, notes: "Daily assembly short clip" },
+  { id: "ytv3", schoolId: SCHOOL_B, title: "Science Fair 2026 Exhibition", youtubeLink: "https://youtube.com/watch?v=mock_a3", datePublished: "2026-06-01", views: 890, likes: 64, comments: 8, watchTime: 18, contentType: "event", performanceRating: 80, notes: "Students showcased working models" },
+  { id: "ytv4", schoolId: SCHOOL_B, title: "Parent-Teacher Meeting Highlights", youtubeLink: "https://youtube.com/watch?v=mock_a4", datePublished: "2026-06-10", views: 210, likes: 15, comments: 2, watchTime: 3, contentType: "event", performanceRating: 50, notes: "Low engagement - try shorter format next time" },
+  { id: "ytv5", schoolId: SCHOOL_B, title: "Admissions Open 2026 - Apply Now", youtubeLink: "https://youtube.com/watch?v=mock_a5", datePublished: "2026-06-15", views: 1560, likes: 98, comments: 21, watchTime: 35, contentType: "admission", performanceRating: 85, notes: "Best performing video - strong CTA worked well" },
+  { id: "ytv6", schoolId: SCHOOL_B, title: "Teacher Tip: How to Improve Handwriting", youtubeLink: "https://youtube.com/watch?v=mock_a6", datePublished: "2026-06-18", views: 420, likes: 31, comments: 5, watchTime: 6, contentType: "teacher_tip", performanceRating: 65, notes: "Good parent engagement in comments" },
+  { id: "ytv7", schoolId: SCHOOL_B, title: "Student Achievement: Sai scored 98%", youtubeLink: "https://youtube.com/watch?v=mock_a7", datePublished: "2026-06-22", views: 280, likes: 42, comments: 7, watchTime: 4, contentType: "student_achievement", performanceRating: 70, notes: "Parents love seeing student success stories" },
+  { id: "ytv8", schoolId: SCHOOL_B, title: "Yoga Day Celebration 2026", youtubeLink: "https://youtube.com/watch?v=mock_a8", datePublished: "2026-06-25", views: 180, likes: 14, comments: 1, watchTime: 2, contentType: "event", performanceRating: 45, notes: "Low views - need better promotion" },
+  { id: "ytv9", schoolId: SCHOOL_A, title: "Sri Narayana Campus Tour 2026", youtubeLink: "https://youtube.com/watch?v=mock_n1", datePublished: "2026-05-10", views: 5200, likes: 420, comments: 38, watchTime: 120, contentType: "long_video", performanceRating: 90, notes: "Most viewed video - cinematic quality" },
+  { id: "ytv10", schoolId: SCHOOL_A, title: "Annual Day Grand Performance", youtubeLink: "https://youtube.com/watch?v=mock_n2", datePublished: "2026-06-05", views: 3800, likes: 310, comments: 28, watchTime: 95, contentType: "event", performanceRating: 88, notes: "Parents shared widely on WhatsApp" },
+];
+
+export const youTubeContentPlans: YouTubeContentPlan[] = [
+  { id: "ytcp1", schoolId: SCHOOL_B, videoType: "shorts", topic: "Morning motivation - students reciting prayers", platform: "youtube", status: "ready", createdAt: "2026-06-28T10:00:00Z" },
+  { id: "ytcp2", schoolId: SCHOOL_B, videoType: "long_video", topic: "Complete campus tour and facilities walkthrough", platform: "youtube", status: "draft", createdAt: "2026-06-28T10:00:00Z" },
+  { id: "ytcp3", schoolId: SCHOOL_B, videoType: "admission", topic: "Admissions 2026 - Why choose Sri Adarshavani?", platform: "youtube", status: "draft", createdAt: "2026-06-28T10:00:00Z" },
+  { id: "ytcp4", schoolId: SCHOOL_B, videoType: "parent_guidance", topic: "How to prepare your child for the new academic year", platform: "youtube", status: "draft", createdAt: "2026-06-28T10:00:00Z" },
+  { id: "ytcp5", schoolId: SCHOOL_B, videoType: "teacher_tip", topic: "Reading habits - tips from our Telugu teacher", platform: "youtube", status: "draft", createdAt: "2026-06-28T10:00:00Z" },
+  { id: "ytcp6", schoolId: SCHOOL_B, videoType: "festival_greeting", topic: "Vanakam - Pongal wishes from Sri Adarshavani family", platform: "youtube", status: "draft", createdAt: "2026-06-28T10:00:00Z" },
+];
+
 // Monetization tracker mock
 export const monetization = {
   youtube: {
@@ -237,6 +302,36 @@ export const youtubeTracker = {
     "Post 4 Shorts repurposed from your best Reels.",
     "Add end screens + playlists to lift session watch time.",
     "Pin a comment with admissions CTA on every video.",
+  ],
+};
+
+export const adarshavaniYouTubeTracker = {
+  subscribers: 140,
+  subscribersTarget: 1000,
+  publicWatchHours: 60,
+  watchHoursTarget: 4000,
+  shortsViews: 3400,
+  shortsViewsTarget: 10_000_000,
+  uploads90Days: 18,
+  nextTarget: "Reach 500 subscribers to unlock beginner creator features, then 1,000 for full monetization.",
+  eligibilityBreakdown: {
+    subscribers: { current: 140, target: 1000, label: "1,000 subscribers" },
+    watchHours: { current: 60, target: 4000, label: "4,000 public watch hours" },
+    shortsViews: { current: 3400, target: 10_000_000, label: "10M Shorts views (90 days)" },
+    uploads90Days: { current: 18, target: 3, label: "3 uploads in last 90 days" },
+  },
+  milestones: [
+    { name: "500 subscribers — Beginner creator features", current: 140, target: 500, done: false },
+    { name: "1,000 subscribers — Main monetization goal", current: 140, target: 1000, done: false },
+    { name: "4,000 public watch hours", current: 60, target: 4000, done: false },
+    { name: "10M Shorts views in 90 days", current: 3400, target: 10_000_000, done: false },
+  ],
+  weeklyGrowthPlan: [
+    "Post 3 Shorts this week (Mon/Wed/Fri) to boost subscriber count",
+    "Create 1 long-form campus video to build watch hours",
+    "Engage with every comment within 2 hours to boost algorithm signal",
+    "Add 'Subscribe' watermark and end screens to all new uploads",
+    "Share YouTube videos to WhatsApp groups for initial views boost",
   ],
 };
 
