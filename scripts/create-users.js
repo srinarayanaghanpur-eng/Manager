@@ -32,6 +32,15 @@ const users = [
   },
 ];
 
+async function ensureFirestoreDoc(uid, data) {
+  try {
+    await db.collection("users").doc(uid).set(data);
+    console.log(`  -> Firestore doc written`);
+  } catch (e) {
+    console.log(`  -> Firestore write failed: ${e.message}`);
+  }
+}
+
 async function main() {
   for (const u of users) {
     try {
@@ -42,20 +51,28 @@ async function main() {
       });
       await auth.setCustomUserClaims(record.uid, { role: u.role });
       console.log(`OK  ${u.displayName} (${u.email}) — uid: ${record.uid}`);
-      try {
-        await db.collection("users").doc(record.uid).set({
+      await ensureFirestoreDoc(record.uid, {
+        email: u.email,
+        displayName: u.displayName,
+        role: u.role,
+        createdAt: new Date().toISOString(),
+      });
+    } catch (err) {
+      if (err.code === "auth/email-already-exists") {
+        console.log(`EXISTS  ${u.email} — fetching uid...`);
+        const record = await auth.getUserByEmail(u.email);
+        console.log(`  -> uid: ${record.uid}`);
+        // Ensure claims are set
+        if (record.customClaims?.role !== u.role) {
+          await auth.setCustomUserClaims(record.uid, { role: u.role });
+          console.log(`  -> claims updated to ${u.role}`);
+        }
+        await ensureFirestoreDoc(record.uid, {
           email: u.email,
           displayName: u.displayName,
           role: u.role,
-          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         });
-        console.log(`  -> Firestore doc created`);
-      } catch (fsErr) {
-        console.log(`  -> Firestore doc skipped (enable Firestore in console)`);
-      }
-    } catch (err) {
-      if (err.code === "auth/email-already-exists") {
-        console.log(`EXISTS  ${u.email} — skipping`);
       } else {
         console.error(`FAIL  ${u.email}:`, err.message);
       }
